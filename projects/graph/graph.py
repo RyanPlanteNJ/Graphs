@@ -44,12 +44,12 @@ class Graph:
         queue = Queue()
         queue.enqueue(starting_vertex)
         while queue.size() > 0:
-            v = q.dequeue()
+            v = queue.dequeue()
             if v not in visit:
                 visit.add(v)
                 print(v)
                 for next_vertex in self.get_neighbors(v):
-                    q.enqueue(next_vertex)
+                    queue.enqueue(next_vertex)
 
 
 
@@ -59,22 +59,26 @@ class Graph:
         beginning from starting_vertex.
         """
         visit = set()
-        stack = Stack()
-        stack.push(starting_vertex)
-        
-        while stack.size() > 0:
-            #Remove first item from stack
+        s = Stack()
+        s.push(starting_vertex)
+
+
+        while s.size() > 0:
+
+            # Remove first item from stack
             v = s.pop()
-            #if item has not been visited
+
+            # If its not visited
             if v not in visit:
-                visit.add(v)
                 print(v)
-            
-            for next_vertex in self.get_neighbors(v):
-                stack.push(next_vertex)
+                # Mark visited
+                visit.add(v)
+
+                for next_vertex in self.get_neighbors(v):
+                    s.push(next_vertex)
 
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, visit=None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
@@ -115,24 +119,25 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
+        lst = []
         visit = set()
-        stack = deque()
-        stack.append([starting_vertex])
-        while len(stack) > 0:
-            currentP = stack.pop()
-            currentN = currentP[-1]
-            if currentN == destination_vertex:
-                return currentP
-            if currentN not in visit:
-                visit.add(currentN)
-                for neighbor in self.vertices[currentN]:
-                    newP = list(currentP)
-                    newP.append(neighbor)
-                    stack.append(newP)
+        stack = Stack()
+        stack.push(starting_vertex)
+        while stack.size() > 0:
+            v = stack.pop()
+            if v not in visit:
+                visit.add(v)
+                print (v)
+                lst.append(v)
+                if v == destination_vertex:
+                    return lst
+                    break
+                for next_vertex in self.get_neighbors(v):
+                    stack.push(next_vertex)
 
 
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+    def dfs_recursive(self, starting_vertex, destination_vertex, visit = []):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -150,7 +155,7 @@ class Graph:
                 print(f'edge: {edge} -- neighbors of {starting_vertex}: {self.get_neighbors(starting_vertex)}')
                 if edge not in visit:
                     print(f'{edge} has not been visited, append {starting_vertex} if not in List')
-                path = self.dfs_recursive(edge, destination_vertex, visit)
+                    path = self.dfs_recursive(edge, destination_vertex, visit)
                     if path is not None:
                         print(path, "PATH")
                         return path
