@@ -102,7 +102,7 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        queue = Queue()
+        queue = Queue() 
         queue.enqueue([starting_vertex])
         while queue.size() > 0:
             path = queue.dequeue()
