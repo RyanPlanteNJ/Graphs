@@ -17,7 +17,7 @@ world = World()
 map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
-room_graph=literal_eval(open(map_file, "r").read())
+room_graph = literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
@@ -29,7 +29,31 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+#keep track of "reverse directions" so we can keep track of valid moves
+backtrack = []
+rev_direct = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
 
+#set so we can track visited rooms
+visited = set()
+
+#while we have rooms that are unvisited
+
+while len(visited) < len(room_graph):
+    next_move = None
+    #for each exit in the room
+    for exit in player.current_room.get_exits():
+        if player.current_room.get_room_in_direction(exit) not in visited:
+            next_move = exit
+            break
+    if next_move is not None:
+        traversal_path.append(next_move)
+        backtrack.append(rev_direct[next_move])
+        player.travel(next_move)
+        visited.add(player.current_room)
+    else:
+        next_move = backtrack.pop()
+        traversal_path.append(next_move)
+        player.travel(next_move)
 
 # TRAVERSAL TEST
 visited_rooms = set()
